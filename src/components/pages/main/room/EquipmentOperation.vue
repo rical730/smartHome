@@ -7,7 +7,7 @@
       <div class="aui-grids-box" v-cloak>
         <div class="aui-grids-item" v-for="(item,index) in gridsData" :key="index">
           <div class="aui-grids-item-hd" @click="addPopupVisible = true">
-            <img :src="item.imgName" alt="Kepai">
+            <img :src="imgDict[item.imgName]" alt="Kepai">
           </div>
           <br/>
           <div class="aui-grids-item-bd">
@@ -25,7 +25,7 @@
 
         <div v-else class="aui-grids-item" v-for="(item,index) in roomEquipments" :key="index">
           <div class="aui-grids-item-hd">
-            <img :src="item.imgName" alt="Kepai">
+            <img :src="imgDict[item.imgName]" alt="Kepai">
           </div>
           <br/>
           <div class="aui-grids-item-bd">
@@ -43,7 +43,7 @@
 
         <div v-else class="aui-grids-item" v-for="(item,index) in roomEquipments" :key="index">
           <div class="aui-grids-item-hd">
-            <img :src="item.imgName" alt="Kepai">
+            <img :src="imgDict[item.imgName]" alt="Kepai">
           </div>
 
           <br/>
@@ -77,55 +77,74 @@
         handleName: '',
         // 模态层
         addPopupVisible: false,
+        imgDict: {
+          "icon_airCheack": require('../../../../assets/image/equipmentImages/icon_airCheack.png'), // 空气检测仪
+          "icon_waterClean": require('../../../../assets/image/equipmentImages/icon_waterClean.png'), // 净水器
+          "icon_security": require('../../../../assets/image/equipmentImages/icon_security.png'), // 安防
+          "icon_socket": require('../../../../assets/image/equipmentImages/icon_socket.png'), // 智能插座
+          "icon_gateway": require('../../../../assets/image/equipmentImages/icon_gateway.png'), // 智能网关
+          "icon_dry": require('../../../../assets/image/equipmentImages/icon_dry.png'), // 除湿器
+          "icon_temp": require('../../../../assets/image/equipmentImages/icon_temp.png'), // 温控器
+          "icon_heatPump": require('../../../../assets/image/equipmentImages/icon_heatPump.png'), // 热泵
+          "icon_pressureCooker": require('../../../../assets/image/equipmentImages/icon_pressureCooker.png'), // 电压力锅
+          "icon_doorLock": require('../../../../assets/image/equipmentImages/icon_doorLock.png'), // 智能门锁
+          "icon_switch": require('../../../../assets/image/equipmentImages/icon_airCheack.png'), // 面板开关
+          "icon_mirror": require('../../../../assets/image/equipmentImages/icon_mirror.png'), // 智能魔镜
+          "icon_colorLight": require('../../../../assets/image/equipmentImages/icon_colorLight.png'), // 彩灯
+          "icon_light": require('../../../../assets/image/equipmentImages/icon_light.png'), // 色温灯
+          "icon_lights": require('../../../../assets/image/equipmentImages/icon_lights.png'), // 灯带
+          "icon_smokeAlarm": require('../../../../assets/image/equipmentImages/icon_smokeAlarm.png'), // 烟雾报警器
+          "icon_circle": require('../../../../assets/image/icon_circle.png'), // 窗帘
+        },
         gridsData: [
           {
-            imgName: require('../../../../assets/image/equipmentImages/icon_airCheack.png'),
+            imgName: "icon_airCheack",
             equipmentName: '空气检测仪',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_waterClean.png'),
+            imgName: "icon_waterClean",
             equipmentName: '净水器',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_security.png'),
+            imgName: "icon_security",
             equipmentName: '安防',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_socket.png'),
+            imgName: "icon_socket",
             equipmentName: '智能插座',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_gateway.png'),
+            imgName: "icon_gateway",
             equipmentName: '智能网关',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_dry.png'),
+            imgName: "icon_dry",
             equipmentName: '除湿器',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_temp.png'),
+            imgName: "icon_temp",
             equipmentName: '温控器',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_heatPump.png'),
+            imgName: "icon_heatPump",
             equipmentName: '热泵',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_pressureCooker.png'),
+            imgName: "icon_pressureCooker",
             equipmentName: '电压力锅',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_doorLock.png'),
+            imgName: "icon_doorLock",
             equipmentName: '智能门锁',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_switch.png'),
+            imgName: "icon_switch",
             equipmentName: '面板开关',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_mirror.png'),
+            imgName: "icon_mirror",
             equipmentName: '智能魔镜',
           },
           {
-            imgName: require('../../../../assets/image/equipmentImages/icon_colorLight.png'),
+            imgName: "icon_colorLight",
             equipmentName: '彩灯',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_light.png'),
+            imgName: "icon_light",
             equipmentName: '色温灯',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_lights.png'),
+            imgName: "icon_lights",
             equipmentName: '灯带',
           }, {
-            imgName: require('../../../../assets/image/equipmentImages/icon_smokeAlarm.png'),
+            imgName: "icon_smokeAlarm",
             equipmentName: '烟雾报警器',
           }
         ],

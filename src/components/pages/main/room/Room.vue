@@ -15,7 +15,7 @@
                     <div class="mc-content">
                         <div class="img-container">
                             <router-link :to="{path:'CustomerEquipment',query:{roomName: room.roomName}}">
-                                <img  class="img-responsive" :src="room.imgName"/>
+                                <img  class="img-responsive" :src="imgDict[room.imgName]"/>
                             </router-link>
                         </div>
                         <div class="mc-description">
@@ -29,8 +29,8 @@
                         <h4>
                             房间设备操作
                         </h4>
-                        <router-link class="fa fa-fw fa-plus"
-                                     :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'add'}}"></router-link>
+                        <!-- <router-link class="fa fa-fw fa-plus"
+                                     :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'add'}}"></router-link> -->
                         <router-link class="fa fa-fw fa-trash"
                                      :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'del'}}"></router-link>
                         <router-link class="fa fa-fw fa-pencil"
@@ -49,44 +49,52 @@
     export default {
         data() {
             return {
+                imgDict:{
+                    "sitting_room": require("../../../../assets/image/room/sitting_room.jpg"),
+                    "first_bedroom": require("../../../../assets/image/room/first_bedroom.jpg"),
+                    "second_bedroom": require("../../../../assets/image/room/second_bedroom.jpg"),
+                    "first_bathroom": require("../../../../assets/image/room/first_bathroom.jpg"),
+                    "dining_room": require("../../../../assets/image/room/dining_room.jpg"),
+                    "default_room": require("../../../../assets/image/room/default_room.jpg"),
+                },
                 roomData: [
                     {
-                        imgName: require("../../../../assets/image/room/sitting_room.jpg"),
+                        imgName: "sitting_room",
                         roomName: "客厅",
-                        totalEquipment: 7,
-                        onlineEquipment: 5,
+                        totalEquipment: 2,
+                        onlineEquipment: 2,
                         roomID: 1
                     },
                     {
-                        imgName: require("../../../../assets/image/room/first_bedroom.jpg"),
+                        imgName: "first_bedroom",
                         roomName: "主卧室",
-                        totalEquipment: 0,
-                        onlineEquipment: 0,
+                        totalEquipment: 3,
+                        onlineEquipment: 2,
                         roomID: 2
                     },
                     {
-                        imgName: require("../../../../assets/image/room/second_bedroom.jpg"),
+                        imgName: "second_bedroom",
                         roomName: "次卧室",
                         totalEquipment: 0,
                         onlineEquipment: 0,
                         roomID: 3
                     },
                     {
-                        imgName: require("../../../../assets/image/room/first_bathroom.jpg"),
+                        imgName: "first_bathroom",
                         roomName: "洗手间",
                         totalEquipment: 0,
                         onlineEquipment: 0,
                         roomID: 4
                     },
                     {
-                        imgName: require("../../../../assets/image/room/dining_room.jpg"),
+                        imgName: "dining_room",
                         roomName: "厨房",
                         totalEquipment: 0,
                         onlineEquipment: 0,
                         roomID: 5
                     },
                     {
-                        imgName: require("../../../../assets/image/room/default_room.jpg"),
+                        imgName: "default_room",
                         roomName: "默认房间",
                         totalEquipment: 0,
                         onlineEquipment: 0,
