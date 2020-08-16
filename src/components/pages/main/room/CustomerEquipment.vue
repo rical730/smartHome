@@ -3,11 +3,11 @@
         <common-header :header-title="headerTitle"/>
         <div style="height: 2.3rem"></div>
         <!---------------------------->
+        <!--<p>温度：{{temperature}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;湿度：{{wetDegree}}%</p>-->
+        <!--<p>煤气浓度：{{coalDegree}}%&nbsp;&nbsp;&nbsp;光照强度：{{lightDegree}}</p>-->
         <div class="addEquipment" v-cloak>
             <div class="imgcard">
-                <div class="container">
-                    <!--<p>温度：{{temperature}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;湿度：{{wetDegree}}%</p>-->
-                    <!--<p>煤气浓度：{{coalDegree}}%&nbsp;&nbsp;&nbsp;光照强度：{{lightDegree}}</p>-->
+               <!--  <div class="container">
                     <table class="table">
                         <thead>
                         <tr>
@@ -41,7 +41,7 @@
 
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </div>
             <div class="aui-grids-box" v-cloak>
                 <div class="aui-grids-item" v-for="(item,index) in gridsData" :key="index">
@@ -104,60 +104,36 @@
                 addPopupVisible: false,
                 equipmentStatus: false,
                 equipmentName: '',
-                gridsData: [
+                allData:{
+                    '客厅':[
                     {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_lights.png'),
-                        equipmentName: '厨房灯',
-                        index: 11
-                    },{
                         imgName: require('../../../../assets/image/equipmentImages/icon_all_light.png'),
-                        equipmentName: '全部灯',
+                        equipmentName: '天花板灯',
                         index: 12
-                    },
-                    {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_colorLight.png'),
-                        equipmentName: '主卧灯',
-                        index: 6
                     }, {
                         imgName: require('../../../../assets/image/equipmentImages/icon_light.png'),
-                        equipmentName: '客厅灯',
+                        equipmentName: '台灯1',
                         index: 7
                     }, {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_aisle_light.png'),
-                        equipmentName: '次卧灯',
+                        imgName: require('../../../../assets/image/equipmentImages/icon_light.png'),
+                        equipmentName: '台灯2',
                         index: 8
-                    },
-                    {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_airCheack.png'),
-                        equipmentName: '空气检测仪',
-                        index: 1
+                    }, {
+                        imgName: require('../../../../assets/image/equipmentImages/icon_colorLight.png'),
+                        equipmentName: '智能灯',
+                        index: 6
                     }, {
                         imgName: require('../../../../assets/image/equipmentImages/icon_socket.png'),
                         equipmentName: '智能插座',
                         index: 2
                     }, {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_door.png'),
-                        equipmentName: '门的状态',
-                        index: 3
-                    }, {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_smokeAlarm.png'),
-                        equipmentName: '活体检测',
-                        index: 4
-                    }, {
-                        imgName: require('../../../../assets/image/equipmentImages/icon_temp.png'),
-                        equipmentName: '温控器',
-                        index: 5
-                    },
-                    {
                         imgName: require('../../../../assets/image/icon_circle.png'),
-                        equipmentName: '窗户1状态',
+                        equipmentName: '窗户',
                         index: 9
-                    }, {
-                        imgName: require('../../../..//assets/image/icon_circle.png'),
-                        equipmentName: '窗户2状态',
-                        index: 10
                     }
-                ],
+                ]
+                },
+                // gridsData: [], //需要再computed中定义
                 index1: false,
                 index2: false,
                 index3: false,
@@ -192,7 +168,12 @@
         mounted() {
             this.getRouteParam();
             this.setTimer();
-
+            console.log(this.$route.query.roomName)
+        },
+        computed: {
+            gridsData () {
+                return this.allData[this.$route.query.roomName]
+            }
         },
         components: {
             CommonHeader

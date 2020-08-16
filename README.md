@@ -1,6 +1,10 @@
 # smartHome APP
 Vue.js 2.x + Axios + Mint-UI + JQuery + Vue-awesome-mui
 
+# 修改日志
+2020.不知道什么时候了，删除了个人中心中的不少功能
+2020.07.05 修改了src/pages/main/room/CustomerEquipment.vue，注释了上面的table，替换了gridData
+
 # 关于程序的运行问题
 首再强调一下，这是一个Vue的项目，安装环境请确保你已经正确的安装了NodeJS。
 记得 npm install
