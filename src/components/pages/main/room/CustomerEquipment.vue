@@ -94,8 +94,18 @@
                 </mt-cell>
               </div>
               <div v-if="item.type==='continues'"><mt-cell :title="index">{{item.value}}</mt-cell></div>
+              <!-- <div v-if="item.type==='continues'">
+                <mt-range
+                  v-model="{{item.value}}"
+                  :min="10"
+                  :max="90"
+                  :step="10"
+                  :bar-height="5">
+                </mt-range>
+              </div> -->
             </div>
           </div>
+          <div v-if="editing===true"><mt-button size="large" type="primary">确定修改</mt-button></div>
           
         </div>
       </mt-popup>
@@ -118,6 +128,7 @@
         addPopupVisible: false,
         deviceid: '',
         equipType: 0,
+        editing: false,
         // 1. 智能灯
         // 2. 台灯
         // 3. 窗户
