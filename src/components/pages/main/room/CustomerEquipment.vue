@@ -44,14 +44,16 @@
         </div> -->
       </div>
       <div class="aui-grids-box" v-cloak>
-        <div class="aui-grids-item" v-for="(item,index) in gridsData" :key="index">
-          <div class="aui-grids-item-hd" @click="modalControl(item)">
-            <img :src="imgDict[item.imgName]" alt="DJun">
-          </div>
-          <br/>
-          <div class="aui-grids-item-bd">
-            {{item.equipmentName}}
-          </div>
+        <div class="aui-grids-item" v-for="(item,index) in devicesData" :key="index">
+          <router-link :to="{path:'EquipmentDetail',query:{device_id: item.device_id}}">
+            <div class="aui-grids-item-hd">
+              <img :src="imgDict[item.device_type]" alt="DJun">
+            </div>
+            <br/>
+            <div class="aui-grids-item-bd">
+              {{item.device_name}}
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
@@ -142,14 +144,14 @@
 
 <script>
   import CommonHeader from "../../../common/Header"
-  import {getRoomDevice} from '../../../../model/index';
+  import {getRoomDevices} from '../../../../model/index';
   import { MessageBox } from 'mint-ui';
   import { Indicator } from 'mint-ui';
   export default {
     name: "CustomerEquipment",
     data() {
       return {
-        devicesData: {},
+        devicesData: [],
         oneDeviceData: {},
         visible: this.popupVisible,
         // 基础信息展示界面
@@ -186,79 +188,11 @@
           "icon_switch": require('../../../../assets/image/equipmentImages/icon_switch.png'), // 面板开关
           "icon_mirror": require('../../../../assets/image/equipmentImages/icon_mirror.png'), // 智能魔镜
           "icon_colorLight": require('../../../../assets/image/equipmentImages/icon_colorLight.png'), // 彩灯
-          "icon_light": require('../../../../assets/image/equipmentImages/icon_light.png'), // 色温灯
+          "small_light": require('../../../../assets/image/equipmentImages/icon_light.png'), // 色温灯
           "icon_lights": require('../../../../assets/image/equipmentImages/icon_lights.png'), // 灯带
           "icon_smokeAlarm": require('../../../../assets/image/equipmentImages/icon_smokeAlarm.png'), // 烟雾报警器
           "icon_circle": require('../../../../assets/image/icon_circle.png'), // 窗帘
         },
-        allData:{
-          '1':{
-            "light1": {
-              imgName: "icon_light",
-              equipmentName: '台灯1',
-              equipmentStatus: true,
-              online: true,
-              equipType: "light",
-              otherstatus: {}
-            },
-            "light3": {
-              imgName: "icon_colorLight",
-              equipmentName: '智能灯',
-              equipmentStatus: false,
-              online: true,
-              equipType: "smart_light",
-              otherstatus: {
-                '亮度': {
-                  type: 'discreate',
-                  slots: [{values: ['强','中','弱']}],
-                  value: '强'
-                },
-                '温度': {
-                  type: 'continues',
-                  step: 1,
-                  max: 30,
-                  min: 16,
-                  value: 25
-                }
-              }
-            },
-            "air1": {
-              imgName: "icon_airCheack",
-              equipmentName: '空调',
-              equipmentStatus: false,
-              online: true,
-              equipType: "air",
-              otherstatus: {}
-            }
-          },
-          '主卧室':{
-            "light2": {
-              imgName: "icon_colorLight",
-              equipmentName: '智能灯',
-              equipmentStatus: false,
-              online: true,
-              equipType: "smart_light",
-              otherstatus: {}
-            },
-            "socket1": {
-              imgName: "icon_socket",
-              equipmentName: '智能插座',
-              equipmentStatus: false,
-              online: true,
-              equipType: "smart_socket",
-              otherstatus: {}
-            },
-            "circle2": {
-              imgName: "icon_circle",
-              equipmentName: '窗户',
-              equipmentStatus: false,
-              online: true,
-              equipType: "circle",
-              otherstatus: {}
-            }
-          }
-        },
-        // gridsData: [], //需要再computed中定义
         // index1: false, // 空气检测仪
         // index2: false, // 智能插座
         // index3: false, // 门的状态
@@ -291,7 +225,7 @@
     },
     props: ['popupVisible'],
     created() {
-      getRoomDevice(this.roomId).then(data => this.devicesData = data.data);
+      getRoomDevices(this.roomId).then(data => this.devicesData = data.result);
     },
     computed: {
       gridsData () {
@@ -303,9 +237,6 @@
       roomId() {
         return this.$route.query.room_id;
       }
-      // otherstatus () {
-      //   return this.allData[this.roomId][this.deviceId].otherstatus
-      // }
     },
     components: {
       CommonHeader
@@ -422,20 +353,6 @@
       // }
 
     },
-    watch: {
-      equipmentStatus: function () {
-        let that = this;
-
-        // status = that.allData[that.roomId][that.deviceId]["equipmentStatus"];
-        console.log("deviceId: ", that.deviceId);
-        console.log("equipmentStatus: ", that.equipmentStatus)
-        that.allData[that.roomId][that.deviceId]["equipmentStatus"] = that.equipmentStatus // test lkj
-        // console.log("equipmentStatus: ", that.allData[that.roomId][that.deviceId]["equipmentStatus"])
-
-        console.log("that.equipType", that.equipType);
-      }
-    }
-
   }
 </script>
 

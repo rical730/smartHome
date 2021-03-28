@@ -9,6 +9,7 @@ import User from "../components/pages/main/user/User";
 // import Test from '../components/pages/test'
 import EquipmentOperation from "../components/pages/main/room/EquipmentOperation";
 import CustomerEquipment from "../components/pages/main/room/CustomerEquipment";
+import EquipmentDetail from "../components/pages/main/room/EquipmentDetail";
 import SwitchStatus from "../components/pages/main/room/SwitchStatus";
 
 Vue.use(Router);
@@ -69,6 +70,14 @@ export default new Router({
       component: CustomerEquipment,
       meta: {
         index: 10,
+        showBottomNav: false,
+      },
+    },
+    {
+      path: "/EquipmentDetail",
+      component: EquipmentDetail,
+      meta: {
+        index: 11,
         showBottomNav: false,
       },
     },

@@ -44,31 +44,28 @@
 </template>
 
 <script>
-    import roomHeader from './Header';
-    import { Indicator } from 'mint-ui';
+import roomHeader from './Header';
+import { Indicator } from 'mint-ui';
+import { getRoomsInfo } from '../../../../model';
     export default {
         data() {
             return {
                 imgDict:{
-                    "1": require("../../../../assets/image/room/sitting_room.jpg"),
-                    "first_bedroom": require("../../../../assets/image/room/first_bedroom.jpg"),
+                    "living_room": require("../../../../assets/image/room/sitting_room.jpg"),
+                    "bedroom": require("../../../../assets/image/room/first_bedroom.jpg"),
                     "second_bedroom": require("../../../../assets/image/room/second_bedroom.jpg"),
                     "first_bathroom": require("../../../../assets/image/room/first_bathroom.jpg"),
                     "dining_room": require("../../../../assets/image/room/dining_room.jpg"),
                     "default_room": require("../../../../assets/image/room/default_room.jpg"),
                 },
-                roomData: [
-                    {
-                        room_type: 1,
-                        room_name: "客厅",
-                        total_device_num: 2,
-                        online_device_num: 2,
-                        room_id: 1
-                    },
-                ],
+                roomData: [],
             }
         },
-
+        created() {
+            getRoomsInfo().then(res => {
+                this.roomData = res.result;
+            })
+        },
         mounted() {
             !function (t) {
                 let i = function (i, n) {
