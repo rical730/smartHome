@@ -5,6 +5,7 @@
   "author": "DJun",
   "private": true,
   "scripts": {
+    "push": "GITBR=$(git branch | grep \\* | cut -d ' ' -f2);git push origin ${GITBR}",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js"
@@ -62,7 +63,7 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": ">= 6.0.0",
+    "node": ">= 8.0.0",
     "npm": ">= 3.0.0"
   },
   "browserslist": [

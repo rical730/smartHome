@@ -45,12 +45,12 @@
       </div>
       <div class="aui-grids-box" v-cloak>
         <div class="aui-grids-item" v-for="(item,index) in gridsData" :key="index">
-          <div class="aui-grids-item-hd" @click="modalControl(index)">
+          <div class="aui-grids-item-hd" @click="modalControl(item)">
             <img :src="imgDict[item.imgName]" alt="DJun">
           </div>
           <br/>
           <div class="aui-grids-item-bd">
-            {{item.equipmentName}}   {{index}}
+            {{item.equipmentName}}
           </div>
         </div>
       </div>
@@ -72,41 +72,68 @@
         </div>
         <div v-else>
           <div>
-            <h3 class="modal-header modal-title">
+            <h3 class="modal-header modal-title" style="display:flex;">
               <!-- <mt-button @click.native="addPopupVisible = false" size="large" type="primary">返回</mt-button> -->
-              <mt-button slot="left" icon="back" @click.native="addPopupVisible = false"></mt-button>
-              {{equipmentName}} id:{{deviceid}}
+              <mt-button icon="back" @click.native="addPopupVisible = false"></mt-button>
+              <span style="flex-grow: 1;padding-left: 10px">{{oneDeviceData.equipmentName}}</span>
+              <mt-button icon='more' @click.native="showSetting(oneDeviceData)"></mt-button>
             </h3>
           </div>
           <div style="height: 4rem"></div>
           <div class="modal-body modal-content">
             <span style="width: 100%">常规状态</span>
-            <mt-cell title="在线">{{online}}</mt-cell>
-            <mt-cell title="设备开关"><mt-switch v-model="equipmentStatus"></mt-switch>{{equipmentStatus}}</mt-cell>
+            <mt-cell title="在线">{{oneDeviceData.online ? '是' : '否'}}</mt-cell>
+            <mt-cell title="设备开关"><mt-switch v-model="oneDeviceData.equipmentStatus"></mt-switch></mt-cell>
           </div>
+          <div style="height: 4rem"></div>
           <div class="modal-body modal-content">
             <span style="width: 100%">附加状态</span>
-            <div v-for="(item,index) in specialStatus" :key="index">
+            <div v-for="(item, index) in oneDeviceData.otherstatus" :key="index">
               <div v-if="item.type==='discreate'">
-                <mt-cell :title="index">
+                <mt-cell :title="item.name">
                   <!-- <mt-picker :slots="mytest" @change="pikerValuesChange"></mt-picker> -->
-                  <mt-picker :slots="item.slots" @change="((val)=>{changeStatus(val, index)})" :visible-item-count="2" :valueKey="item.value"></mt-picker>
+                  <mt-picker
+                    :slots="computedSlots(item)" 
+                    :visible-item-count="3" 
+                    @change="pickerChange"
+                  ></mt-picker>
                 </mt-cell>
               </div>
-              <div v-if="item.type==='continues'"><mt-cell :title="index">{{item.value}}</mt-cell></div>
-              <!-- <div v-if="item.type==='continues'">
+              <!-- <div v-if="item.type==='continues'"></div> -->
+              <div v-if="item.type==='continues'">
+                <mt-cell :title="item.name">{{item.value}}</mt-cell>
                 <mt-range
-                  v-model="{{item.value}}"
-                  :min="10"
-                  :max="90"
-                  :step="10"
+                  v-model="item.value"
+                  :min="item.min"
+                  :max="item.max"
+                  :step="item.step"
                   :bar-height="5">
                 </mt-range>
-              </div> -->
+              </div>
             </div>
           </div>
           <div v-if="editing===true"><mt-button size="large" type="primary">确定修改</mt-button></div>
           
+        </div>
+      </mt-popup>
+      <!-- 修改基本信息 如名称 删除设备等 -->
+      <mt-popup style="background-color: white" v-model="settingVisible" position="right" class="mint-popup-3"
+            :modal="false">
+        <div>
+          <div>
+            <h3 class="modal-header modal-title" style="display:flex;">
+              <!-- <mt-button @click.native="addPopupVisible = false" size="large" type="primary">返回</mt-button> -->
+              <mt-button icon="back" @click.native="settingVisible = false"></mt-button>
+              <span style="flex-grow: 1;padding-left: 10px">设置</span>
+              <mt-button icon='back' style="opacity: 0"></mt-button>
+            </h3>
+          </div>
+          <div class="page">
+            <mt-cell title="设备名称" :value="deviceName" is-link @click.native="changeName(deviceName)"></mt-cell>
+          </div>
+          <div style="margin: 15px;">
+            <mt-button type="danger" size='large' @click.native="deleteDevice(deviceId)">删除设备</mt-button>
+          </div>
         </div>
       </mt-popup>
     </div>
@@ -115,18 +142,24 @@
 
 <script>
   import CommonHeader from "../../../common/Header"
-
+  import {getRoomDevice} from '../../../../model/index';
+  import { MessageBox } from 'mint-ui';
+  import { Indicator } from 'mint-ui';
   export default {
     name: "CustomerEquipment",
     data() {
       return {
-        resData: '',
-        headerTitle: '',
-        postUrl: 'http://192.168.0.3:8886/add',
+        devicesData: {},
+        oneDeviceData: {},
         visible: this.popupVisible,
-        roomName: '',
+        // 基础信息展示界面
         addPopupVisible: false,
-        deviceid: '',
+        // 设置界面
+        settingVisible: false,
+        // 选中需要修改名称的设备
+        deviceName: '',
+        // 选中删除的设备id
+        deviceId: '',
         equipType: 0,
         editing: false,
         // 1. 智能灯
@@ -138,7 +171,7 @@
         equipmentName: '',
         equipmentStatus: false,
         online: false,
-        specialStatus: {},
+        otherstatus: {},
         imgDict: {
           "icon_airCheack": require('../../../../assets/image/equipmentImages/icon_airCheack.png'), // 空气检测仪
           "icon_waterClean": require('../../../../assets/image/equipmentImages/icon_waterClean.png'), // 净水器
@@ -159,7 +192,7 @@
           "icon_circle": require('../../../../assets/image/icon_circle.png'), // 窗帘
         },
         allData:{
-          '客厅':{
+          '1':{
             "light1": {
               imgName: "icon_light",
               equipmentName: '台灯1',
@@ -257,24 +290,58 @@
       }
     },
     props: ['popupVisible'],
-    mounted() {
-      this.getRouteParam();
-      // this.setTimer();
-      this.roomName = this.$route.query.roomName;
-      console.log("roomName: ", this.roomName)
+    created() {
+      getRoomDevice(this.roomId).then(data => this.devicesData = data.data);
     },
     computed: {
       gridsData () {
-        return this.allData[this.$route.query.roomName]
+        return this.devicesData.devices || [];
       },
-      // specialStatus () {
-      //   return this.allData[this.$route.query.roomName][this.deviceid].otherstatus
+      headerTitle() {
+        return (this.devicesData.room_name || '房间') + "的设备";
+      },
+      roomId() {
+        return this.$route.query.room_id;
+      }
+      // otherstatus () {
+      //   return this.allData[this.roomId][this.deviceId].otherstatus
       // }
     },
     components: {
       CommonHeader
     },
     methods: {
+      showSetting(oneDeviceData) {
+        this.settingVisible = true;
+        this.deviceName = oneDeviceData.equipmentName;
+        this.deviceId = oneDeviceData.deviceId;
+      },
+      deleteDevice(deviceId) {
+        MessageBox({
+          title: '提示',
+          message: '确定执行此操作?',
+          showCancelButton: true
+        }).then(({ value, action }) => {
+
+        });
+      },
+      changeName(val) {
+        MessageBox.prompt(val, '请输入名称').then(({ value, action }) => {
+          if (action === 'confirm') {
+            Indicator.open('加载中...');
+            setTimeout(() => {
+              this.deviceName = value;
+              Indicator.close();
+            }, 1500);
+          }
+        });
+      },
+      computedSlots(item) {
+        return [{
+          values: item.options,
+          defaultIndex: item.options.indexOf(item.value)
+        }];
+      },
       // setTimer() {
       //     this.timer = setInterval( () => {
       //         this.requestService("现在多热");
@@ -288,28 +355,14 @@
       //     }, 3000)
 
       // },
-      getRouteParam() {
-        this.headerTitle = this.$route.query.roomName + "的设备";
+      modalControl(deviceData) {
+        this.oneDeviceData = deviceData;
+        this.addPopupVisible = true;
       },
-      modalControl(deviceid) {
-        this.deviceid = deviceid;
-        this.specialStatus = this.allData[this.$route.query.roomName][this.deviceid]["otherstatus"]
-        // console.log('specialStatus:', this.specialStatus)
-        this.equipmentName = this.allData[this.$route.query.roomName][this.deviceid]["equipmentName"];
-        this.equipType = this.allData[this.$route.query.roomName][this.deviceid]["equipType"];
-        this.equipmentStatus = this.allData[this.$route.query.roomName][this.deviceid]["equipmentStatus"];
-        this.online = this.allData[this.$route.query.roomName][this.deviceid]["online"]
-        this.addPopupVisible = true
+      poweronoff(deviceId) {
       },
-      poweronoff(deviceid) {
-      },
-      changeStatus(val, key) { 
-        // console.log('=======', key,val.getValues())
-        // selected_val = val.getValues()
-        if(val.getValues()[0] != undefined)
-          console.log(val.getValues()[0])
-          this.allData[this.$route.query.roomName][this.deviceid]["otherstatus"][key]["value"] = val.getValues()[0]
-          // console.log('====', this.allData[this.$route.query.roomName][this.deviceid]["otherstatus"][key])
+      pickerChange(picker, values) { 
+        console.log(picker, values)
       }
       /**
        * 1.现在多热（温度）
@@ -373,11 +426,11 @@
       equipmentStatus: function () {
         let that = this;
 
-        // status = that.allData[that.roomName][that.deviceid]["equipmentStatus"];
-        console.log("deviceid: ", that.deviceid);
+        // status = that.allData[that.roomId][that.deviceId]["equipmentStatus"];
+        console.log("deviceId: ", that.deviceId);
         console.log("equipmentStatus: ", that.equipmentStatus)
-        that.allData[that.roomName][that.deviceid]["equipmentStatus"] = that.equipmentStatus // test lkj
-        // console.log("equipmentStatus: ", that.allData[that.roomName][that.deviceid]["equipmentStatus"])
+        that.allData[that.roomId][that.deviceId]["equipmentStatus"] = that.equipmentStatus // test lkj
+        // console.log("equipmentStatus: ", that.allData[that.roomId][that.deviceId]["equipmentStatus"])
 
         console.log("that.equipType", that.equipType);
       }

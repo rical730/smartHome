@@ -6,16 +6,16 @@
             <div class="col-md-4 col-sm-6 col-xs-12" v-for="(room,index) in roomData" :key="index">
                 <article class="material-card Deep-Purple">
                     <h2>
-                        <span>{{room.roomName}}</span>
+                        <span>{{room.room_name}}</span>
                         <strong>
                             <i class="fa fa-fw fa-star"></i>
-                            设备：{{ room.onlineEquipment }}/{{ room.totalEquipment }} 在线
+                            设备：{{ room.online_device_num }}/{{ room.total_device_num }} 在线
                         </strong>
                     </h2>
                     <div class="mc-content">
                         <div class="img-container">
-                            <router-link :to="{path:'CustomerEquipment',query:{roomName: room.roomName}}">
-                                <img  class="img-responsive" :src="imgDict[room.imgName]"/>
+                            <router-link :to="{path:'CustomerEquipment',query:{room_id: room.room_id}}">
+                                <img class="img-responsive" :src="imgDict[room.room_type]"/>
                             </router-link>
                         </div>
                         <div class="mc-description">
@@ -29,8 +29,8 @@
                         <h4>
                             房间设备操作
                         </h4>
-                        <!-- <router-link class="fa fa-fw fa-plus"
-                                     :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'add'}}"></router-link> -->
+                        <router-link class="fa fa-fw fa-plus"
+                                     :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'add'}}"></router-link>
                         <router-link class="fa fa-fw fa-trash"
                                      :to="{path:'equipmentOperation',query:{id: room.roomID,name: 'del'}}"></router-link>
                         <router-link class="fa fa-fw fa-pencil"
@@ -50,7 +50,7 @@
         data() {
             return {
                 imgDict:{
-                    "sitting_room": require("../../../../assets/image/room/sitting_room.jpg"),
+                    "1": require("../../../../assets/image/room/sitting_room.jpg"),
                     "first_bedroom": require("../../../../assets/image/room/first_bedroom.jpg"),
                     "second_bedroom": require("../../../../assets/image/room/second_bedroom.jpg"),
                     "first_bathroom": require("../../../../assets/image/room/first_bathroom.jpg"),
@@ -59,47 +59,12 @@
                 },
                 roomData: [
                     {
-                        imgName: "sitting_room",
-                        roomName: "客厅",
-                        totalEquipment: 2,
-                        onlineEquipment: 2,
-                        roomID: 1
+                        room_type: 1,
+                        room_name: "客厅",
+                        total_device_num: 2,
+                        online_device_num: 2,
+                        room_id: 1
                     },
-                    {
-                        imgName: "first_bedroom",
-                        roomName: "主卧室",
-                        totalEquipment: 3,
-                        onlineEquipment: 2,
-                        roomID: 2
-                    },
-                    {
-                        imgName: "second_bedroom",
-                        roomName: "次卧室",
-                        totalEquipment: 0,
-                        onlineEquipment: 0,
-                        roomID: 3
-                    },
-                    {
-                        imgName: "first_bathroom",
-                        roomName: "洗手间",
-                        totalEquipment: 0,
-                        onlineEquipment: 0,
-                        roomID: 4
-                    },
-                    {
-                        imgName: "dining_room",
-                        roomName: "厨房",
-                        totalEquipment: 0,
-                        onlineEquipment: 0,
-                        roomID: 5
-                    },
-                    {
-                        imgName: "default_room",
-                        roomName: "默认房间",
-                        totalEquipment: 0,
-                        onlineEquipment: 0,
-                        roomID: 6
-                    }
                 ],
             }
         },
